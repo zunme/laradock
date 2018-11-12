@@ -53,7 +53,7 @@ class infokakao {
 
 기타문의 사항은 고객센터 02-552-1772로 연락주시기 바랍니다.
 
-감사드립니다. 
+감사드립니다.
 케이펀딩 드림";
                 $button = array(
                     "name"=>"케이펀딩 바로가기"
@@ -65,18 +65,18 @@ class infokakao {
             case("J0001") :
                 if( !isset($data['emoney'])) return array('code' => -1 , 'messageId'=>'', 'to'=>$tel, 'status'=>'ERROR001', 'text'=>'REQUIRED VALUE');
                 $msg = "케이펀딩 가상계좌로 원리금 ".number_format($data['emoney'])."원이 입급되었습니다.";
-                $msg = "케이펀딩 가상계좌로 원리금 10,000원이 입급되었습니다.";
+                //$msg = "케이펀딩 가상계좌로 원리금 10,000원이 입급되었습니다.";
                 $button = array(
                     "name"=>"정산내역 보기"
                     ,"type"=>"WL"
                     , "url_pc"=>"https://www.kfunding.co.kr/pnpinvest/?mode=mypage_invest_info"
                     , "url_mobile" =>"https://www.kfunding.co.kr/pnpinvest/?mode=mypage_invest_info"
-                );                
+                );
                 break;
             default :
                 return array('code' => -1 , 'messageId'=>'', 'to'=>$tel, 'status'=>'ERROR002', 'text'=>'Template Code');
         }
-        
+
         $data = array(
             "msg_type"=>"AL"
             , "mt_failover"=>"N"
@@ -153,11 +153,11 @@ class infokakao {
 class alimtok extends infokakao {
     public static $pdo;
     function connect(){
-        try 
+        try
         {
             self::$pdo = new PDO('mysql:host=112.175.14.20;dbname=user01', 'user01', 'user015754!@#');
         }
-        catch (PDOException $e) 
+        catch (PDOException $e)
         {
             echo 'Error: ' . $e->getMessage();
             return;
@@ -191,11 +191,11 @@ class alimtok extends infokakao {
                 $indKey[] = $ind;
             }
         }
-        
+
         $sql = 'insert into z_alimitok ( '.implode(' , ' , $indKey).' ) values( '.implode(' , ' , $indArr).' ) ';
         $stmt 	= self::$pdo->prepare($sql);
 
-        $tmp = $msgArr; 
+        $tmp = $msgArr;
         if (isset( $tmp['data'])) $tmp['data'] = addslashes(json_encode($tmp['data']));
         foreach ( $msgArr as $ind => $val){
             if ( in_array($ind , $col)){
@@ -203,7 +203,7 @@ class alimtok extends infokakao {
             }
         }
         $stmt->execute();
-        $insId = self::$pdo->lastInsertId(); 
+        $insId = self::$pdo->lastInsertId();
         if ( (int)$insId < 1) return false;
 
         $res = self::send($msgArr['tel'], $msgArr['code'], $msgArr['data']);
@@ -221,4 +221,3 @@ class alimtok extends infokakao {
 //$msgArr = array('m_id'=>'zunme@nate.com');
 //alimtok::setData($msgArr);
 //var_dump( infokakao::send('010-25376460', 'J0001', array('emoney'=> 1000000)) );
-
